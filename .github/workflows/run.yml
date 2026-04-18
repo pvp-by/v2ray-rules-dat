@@ -47,6 +47,21 @@ jobs:
           repository: v2fly/domain-list-community
           path: community
 
+      - name: Verify required categories
+        run: |
+          CATEGORIES="vk kinopoisk aviasales drweb wildberries rutube ozon wink 2gis kaspersky ok yandex okko avito mosmetro dzen mailru mailru-group category-travel-ru x5 category-gov-ru category-entertainment-ru category-retail-ru category-medicine-ru category-media-ru category-ecommerce-ru category-ru category-bank-ru"
+          : > category-check.txt
+          missing=0
+          for cat in $CATEGORIES; do
+            if [ -f "./community/data/$cat" ]; then
+              echo "[OK] $cat" | tee -a category-check.txt
+            else
+              echo "[MISSING] $cat" | tee -a category-check.txt
+              missing=1
+            fi
+          done
+          exit $missing
+
       - name: Checkout cokebar/gfwlist2dnsmasq
         uses: actions/checkout@v6
         with:
